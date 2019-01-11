@@ -8,10 +8,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 @csp
-def home():
+def home(inline_script_nonce):
     context = {
         'css_class': 'class1',
         'additional_script': None,
+        'inline_script_nonce': inline_script_nonce
     }
     if request.method == 'POST':
         if request.form['css_class']:

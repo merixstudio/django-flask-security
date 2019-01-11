@@ -1,3 +1,5 @@
+import secrets
+
 from flask import make_response
 
 from functools import wraps
@@ -20,18 +22,26 @@ SETTINGS_REPORT_CSP = {
     ],
     'script-src': [
         '\'self\'',
-        '\'sha256-pu1SeSVRQwuLmgKFdpgMzTi7ghm2F3Ldi/iw1Ff6Myc=\''
+        '\'nonce-{}\''
     ]
 }
 REPORT_URI = '/report-csp-violations'
 
 
-def make_csp_header(settings, report_uri=None):
+def get_nonce():
+    return secrets.token_hex()
+
+
+def make_csp_header(settings, nonce, report_uri=None):
     header = ''
     for directive, policies in settings.items():
         header += f'{directive} '
         header += ' '.join(
-            (policy for policy in policies)
+            (
+                policy if 'nonce' not in policy
+                else policy.format(nonce)
+                for policy in policies
+            )
         )
         header += ';'
     if report_uri:
@@ -42,15 +52,16 @@ def make_csp_header(settings, report_uri=None):
 def csp(func):
     @wraps(func)
     def _csp(*args, **kwargs):
-        response = make_response(func(*args, **kwargs))
+        nonce = get_nonce()
+        response = make_response(func(*args, **kwargs, inline_script_nonce=nonce))
         if SETTINGS_REPORT_CSP:
             response.headers[
                 'Content-Security-Policy-Report-Only'
-            ] = make_csp_header(SETTINGS_REPORT_CSP, REPORT_URI)
+            ] = make_csp_header(SETTINGS_REPORT_CSP, nonce, REPORT_URI)
         if SETTINGS_CSP:
             response.headers[
                 'Content-Security-Policy'
-            ] = make_csp_header(SETTINGS_CSP)
+            ] = make_csp_header(SETTINGS_CSP, nonce)
         return response
     return _csp
 
