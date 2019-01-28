@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
+import pprint
+
 from flask import Flask, render_template, request, make_response
+import json
 
 from csp import csp
 
@@ -23,7 +26,7 @@ def home():
 
 @app.route('/report-csp-violations', methods=['POST'])
 def report():
-    print(request.data)
+    pprint.pprint(json.loads(str(request.data, 'utf-8')))
     response = make_response()
     response.status_code = 200
     return response
