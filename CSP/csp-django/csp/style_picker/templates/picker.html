@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body class={{ css_class }}>
+<p id="main-paragraph">
+    This site shows different possibilities regarding css styling. Type in one of the following options to change background:
+</p>
+<ul>
+    <li>class1</li>
+    <li>class2</li>
+    <li>class3</li>
+</ul>
+<p>
+    You can also include one of additional JS scripts from below list.
+</p>
+
+    <form method="POST" action="/" id="mainForm">
+        <input type="text" name="css_class"> <br/>
+        <select name="additional_script">
+            <option value="">No additional scripts</option>
+            <option value="{% static 'js/additional1.js' %}">1</option>
+            <option value="{% static 'js/additional2.js' %}">2</option>
+        </select><br/>
+        <input type="submit" name="submit"><br/>
+    </form>
+    {% if additional_script %}
+            <script src="{{ additional_script }}"></script>
+    {% endif %}
+    <script>console.log('This code was executed in an inline script')</script>
+</body>
+</html>
