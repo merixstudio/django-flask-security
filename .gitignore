@@ -7,4 +7,5 @@
 # virtual envs, databases etc
 venv
 *.sqlite
+db.sqlite3
 

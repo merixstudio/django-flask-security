@@ -1,0 +1,16 @@
+body {
+    background-color: azure;
+    font-family: Arial;
+    font-size: 15px;
+}
+
+div{
+    margin: 10px;
+}
+
+button {
+    font-weight: bold;
+    font-size: 15px;
+    font-family: Arial;
+    background-color: coral;
+}
