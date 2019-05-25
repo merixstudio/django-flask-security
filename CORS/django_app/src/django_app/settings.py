@@ -127,5 +127,5 @@ STATIC_URL = '/static/'
 
 # CORS
 CORS_ORIGIN_WHITELIST = (
-    'localhost:5000',
+    'http://localhost:5000',
 )
